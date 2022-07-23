@@ -1,37 +1,40 @@
-describe("Домашнее задание к занятию 2 Функции", () => {
-  describe("Задача №1 Исследовать массив", () => {
-    it("[-99, 99, 10] => { min: -99, max: 99, avg: `3.33` }", () => {
-      expect(getArrayParams([-99, 99, 10])).toEqual({ min: -99, max: 99, avg: 3.33 });
-    })
-    it("[1, 2, 3, -100, 10] => { min: -100, max: 10, avg: `-16.80` }", () => {
-      expect(getArrayParams([1, 2, 3, -100, 10])).toEqual({ min: -100, max: 10, avg: -16.80 });
-    })
-    it("[5] => { min: 5, max: 5, avg: `5.00` }", () => {
-      expect(getArrayParams([5])).toEqual({ min: 5, max: 5, avg: 5.00 });
-    })
-  })
-  describe("Задача №2 Максимум от суммы", () => {
-    it("[[1, 2, 3], [4, 5, 6]] => 15", () => {
-      expect(makeWork([[1, 2, 3],[4, 5, 6]],worker)).toEqual(15);
-    })
-    it("[[10, 10, 11], [20, 10]] => 31", () => {
-      expect(makeWork([[10, 10, 11], [20, 10]], worker)).toEqual(31);
-    })
-    it("[[0, 0, 0], [-1, -100]] => 0", () => {
-      expect(makeWork([[0, 0, 0], [-1, -100]], worker)).toEqual(0);
+describe("Домашнее задание к занятию 3 «Массивы»", () => {
+  describe("Задача №1 Сравнить массивы", () => {
+    it("[1,2,3] === [1,2,3]  true", () => {
+      expect(compareArrays([1, 2, 3], [1, 2, 3])).toEqual(true)
     })
 
-  })
-  describe("Задача №3 Другая насадка", () => {
-    it("[[10, 20, 30], [-40, -50, -65]] => 25", () => {
-      expect(makeWork([[10, 20, 30], [-40, -50, -65]], worker2)).toEqual(25);
-    })
-    it("[[10, 10, 11], [20, 10]] => 10", () => {
-      expect(makeWork([[10, 10, 11], [20, 10]], worker2)).toEqual(10);
-    })
-    it("[[0, 1, 2], [-1, -100]] => 99", () => {
-      expect(makeWork([[0, 1, 2], [-1, -100]], worker2)).toEqual(99);
+    it("[1, 2], [1, 2, 3] false", () => {
+      expect(compareArrays([1, 2], [1, 2, 3])).toEqual(false)
     })
 
+    it("[1, 2, 3] === [3, 2, 1] false", () => {
+      expect(compareArrays([1, 2, 3], [3, 2, 1])).toEqual(false)
+    })
+
+    it("[0, 1, 2] === [0, 1] false", () => {
+      expect(compareArrays([0, 1, 2], [0, 1])).toEqual(false)
+    })
+
+    it("[0, 1] === [0, 1, 2] false", () => {
+      expect(compareArrays([0, 1], [0, 1, 2])).toEqual(false)
+    })
+    it("[8, 9, 5, 4], [8, 9, 5, 4, 8, 3, 5] false", () => {
+      expect(compareArrays([8, 9, 5, 4], [8, 9, 5, 4, 8, 3, 5])).toEqual(false)
+    })
+  })
+  describe("Задача №2 Фильтрация и преобразование массива", () => {
+    it("[-1, 6, -9, 3] => [60,30]", () => {
+      expect(advancedFilter([-1, 6, -9, 3])).toEqual([60, 30])
+    })
+    it("[-10, -21, 12, 123] => [120, 1230]  true", () => {
+      expect(advancedFilter([-10, -21, 12, 123])).toEqual([120, 1230])
+    })
+    it("[-1, -2] => []  true", () => {
+      expect(advancedFilter([-1, -2])).toEqual([])
+    })
+    it("[4,3,5] => [30]  true", () => {
+      expect(advancedFilter([4, 3, 5])).toEqual([30])
+    })
   })
 })
