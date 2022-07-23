@@ -1,16 +1,45 @@
 "use strict"
 
-function compareArrays(arr1, arr2) {
-    let result;
-    if (arr1.length === arr2.length && arr1.every((item, index) => item === arr2[index])) {
-        result = true;
-    } else result = false;
-
-    return result;
+function Student(name, gender, age) {
+    this.name = name;
+    this.gender = gender;
+    this.age = age;
 }
 
-function advancedFilter(arr) {
-    let resultArr = arr.filter((item) => item > 0).filter((item) => item % 3 === 0).map((item) => item * 10);
+let student1 = new Student("Max", "male", 19);
+let student2 = new Student("Jordan", "male", 21);
+let student3 = new Student("Anna", "female", 21);
 
-    return resultArr;
-}}
+
+Student.prototype.setSubject = function(subjectName) {
+    this.subject = subjectName;
+};
+
+Student.prototype.addMark = function(mark) {
+    if (this.marks === undefined) {
+        this.marks = [mark];
+    } else {
+        this.marks.push(mark);
+    }
+};
+
+Student.prototype.addMarks = function(...marks) {
+    if (this.marks === undefined) {
+        this.marks = [...marks];
+    } else {
+        this.marks = [...this.marks, ...marks];
+    }
+};
+
+Student.prototype.getAverage = function() {
+    let sum = 0;
+    this.marks.forEach((item, index) => sum += item);
+    let avg = sum / this.marks.length;
+    return avg;
+};
+
+Student.prototype.exclude = function(reason) {
+    delete this.marks;
+    delete this.subject;
+    this.excluded = reason;
+}
