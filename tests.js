@@ -1,133 +1,72 @@
-describe('Домашнее задание к лекции 5 «Объекты»', () => {
+describe('Домашнее задание к лекции «Обработка исключений и замыкания»', () => {
+    describe('Задача №1', () => {
+        it('функция parseCount должна парсить значение 123', () => {
+            expect(parseCount("123")).toEqual(123);
+        });
 
-  describe('Задача №1', () => {
-    let printItem;
+        it('функция parseCount должна парсить значение 012', () => {
+            expect(parseCount("012")).toEqual(12);
+        });
 
-    beforeEach(function(){
-      printItem = new PrintEditionItem('Типовой школьный журнал', 2019, 102);
+        it('функция parseCount не должна парсить невалидное значение', () => {
+            expect(() => parseCount("ыфва")).toThrowError("Невалидное значение");
+        });
+
+        it('функция validateCount должна парсить валидное значение', () => {
+            expect(validateCount("56")).toEqual(56);
+        });
+
+        it('функция validateCount не должна парсить невалидное значение', () => {
+            expect(validateCount("ыфва")).toEqual(new Error("Невалидное значение"));
+        });
+
+        it('функция validateCount должна возвращать перехваченную ошибку', () => {
+            expect(validateCount("ыфва").stack.includes("parseCount")).toBeTruthy();
+        });
     });
 
-    it('создание печатного издания', () => {
-      expect(printItem).toBeDefined();
-      expect(printItem.name).toEqual('Типовой школьный журнал');
-      expect(printItem.releaseDate).toEqual(2019);
-      expect(printItem.pagesCount).toEqual(102);
-      expect(printItem.state).toEqual(100);
-      expect(printItem.type).toEqual(null);
-    });
+    describe('Задача №2', () => {
+        it('объект Triangle должен создаваться', () => {
+            expect(new Triangle(1,3,3)).toBeDefined();
+        });
 
-    it('починка печатного издания', () => {
-      printItem.state = 90;
-      printItem.fix();
-      expect(printItem.state).toEqual(100);
-    });
+        it('объект Triangle должен создаваться и правильно считаться периметр и прощадь №1', () => {
+            const triangle = new Triangle(2,5,5);
+            expect(triangle).toBeDefined();
+            expect(triangle.getPerimeter()).toEqual(12);
+            expect(triangle.getArea()).toEqual(4.899);
+        });
 
-    it('геттер для свойства state', () => {
-      printItem.state = 10;
-      const spy = spyOnProperty(printItem, 'state', 'get').and.returnValue(10);
-      expect(printItem.state).toBe(10);
-      expect(spy).toHaveBeenCalled();
-    });
+        it('объект Triangle должен создаваться и правильно считаться периметр и прощадь №2', () => {
+            const triangle = new Triangle(6,10,15);
+            expect(triangle).toBeDefined();
+            expect(triangle.getPerimeter()).toEqual(31);
+            expect(triangle.getArea()).toEqual(20.123);
+        });
 
-    it('сеттер для свойства state', () => {
-      const spy = spyOnProperty(printItem, 'state', 'set');
-      printItem.state = 10;
-      expect(spy).toHaveBeenCalled();
-    });
+        it('объект Triangle не должен создаваться №1', () => {
+            expect(() => new Triangle(1,3,100)).toThrowError("Треугольник с такими сторонами не существует");
+        });
 
-    it('создание объекта Magazine', () => {
-      printItem = new Magazine('Forbes', 2020, 180);
-      expect(printItem.type).toEqual("magazine");
-    });
+        it('объект Triangle не должен создаваться №2', () => {
+            expect(() => new Triangle(100,3,10)).toThrowError("Треугольник с такими сторонами не существует");
+        });
 
-    it('создание объекта Book', () => {
-      printItem = new Book('А. Сапковский', 'Меч Предназначения', 1992, 384);
-      expect(printItem.author).toEqual('А. Сапковский');
-      expect(printItem.type).toEqual('book');
-    });
+        it('объект Triangle не должен создаваться №3', () => {
+            expect(() => new Triangle(1,300,10)).toThrowError("Треугольник с такими сторонами не существует");
+        });
 
-    it('создание объекта NovelBook', () => {
-      printItem = new NovelBook('А. Сапковский', 'Меч Предназначения', 1992, 384);
-      expect(printItem.author).toEqual('А. Сапковский');
-      expect(printItem.type).toEqual('novel');
-    });
+        it('функция getTriangle должна возвращать объект треугольника', () => {
+            expect(getTriangle(2,5,5)).toEqual(new Triangle(2,5,5));
+        });
 
-    it('создание объекта FantasticBook', () => {
-      printItem = new FantasticBook('Джон Толкин', 'Властелин колец', 1954, 2093);
-      expect(printItem.author).toEqual('Джон Толкин');
-      expect(printItem.type).toEqual('fantastic');
-    });
+        it('функция getTriangle не должна возвращать объект треугольника', () => {
+            const triangle = getTriangle(1,3,100);
+            expect(triangle.getArea()).toEqual('Ошибка! Треугольник не существует');
+            expect(triangle.getPerimeter()).toEqual('Ошибка! Треугольник не существует');
+        });
+    })
 
-    it('создание объекта DetectiveBook', () => {
-      printItem = new DetectiveBook('Агата Кристи', 'Десять негритят', 2019, 256);
-      expect(printItem.author).toEqual('Агата Кристи');
-      expect(printItem.type).toEqual('detective');
-    });
-  });
-
-  describe('Задача №2', () => {
-    let library, printItem;
-
-    beforeEach(function(){
-      library = new Library('Библиотека имени Ленина');
-      printItem = new PrintEditionItem('Типовой школьный журнал', 2019, 102);
-    });
-
-    it('создание библиотеки', () => {
-      expect(library).toBeDefined();
-      expect(library.name).toEqual('Библиотека имени Ленина');
-      expect(library.books).toEqual(jasmine.any(Array));
-    });
-
-    it('добавление книги', () => {
-      library.addBook(printItem);
-      expect(library.books[0].name).toEqual('Типовой школьный журнал');
-      expect(library.books.length).toEqual(1);
-    });
-
-    it('поиск книги', () => {
-      library.addBook(printItem);
-      const firstBook = library.findBookBy("releaseDate", 2019);
-      expect(firstBook.name).toEqual('Типовой школьный журнал');
-      const secondBook = library.findBookBy("releaseDate", 2154);
-      expect(secondBook).toEqual(null);
-    });
-
-    it('выдача книги', () => {
-      library.addBook(printItem);
-      const firstBook = library.giveBookByName('Типовой школьный журнал');
-      expect(firstBook.name).toEqual('Типовой школьный журнал');
-      expect(library.books.length).toEqual(0);
-      const secondBook = library.giveBookByName('Судовой журнал');
-      expect(secondBook).toEqual(null);
-    });
-  })
-
-  describe('Задача №3', () => {
-    let student;
-
-    beforeEach(function(){
-      student = new Student("Иван Петров");
-    });
-
-    it('создание объекта Student', () => {
-      expect(student).toBeDefined();
-    });
-
-    it('подсчёт средней оценки по предмету', () => {
-      student.addMark(3, "algebra");
-      student.addMark(5, "algebra");
-      expect(student.getAverageBySubject("algebra")).toEqual(4);
-    });
-
-    it('подсчёт общей средней оценки', () => {
-      student.addMark(3, "algebra");
-      student.addMark(5, "algebra");
-      student.addMark(5, "history");
-      student.addMark(5, "history");
-      expect(student.getAverage()).toEqual(4.5);
-    });
-  });
 });
     it("Отчисление студента работает корректно", () => {
       student2.exclude('low grades')

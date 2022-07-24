@@ -1,97 +1,52 @@
-//ЗАДАЧА 1
+//ЗАДАЧА 1:
 
-class PrintEditionItem{
-  constructor(name, releaseDate, pagesCount){
-    this.name = name;
-    this.releaseDate = releaseDate;
-    this.pagesCount = pagesCount;
-    this.state=100;
-    this.type = null;
-   }
+function parseCount(meaning) {
+  const result = Number.parseInt(meaning, 10);
+    if (isNaN(result)) {
+      throw new Error("Невалидное значение");
+    }
+    return result;
+}
 
-  fix() {
-    this.state=this.state*1.5;
+
+function validateCount(value) {
+  try {
+    return parseCount(value);
+  } catch (err) {
+    return err;
   }
+}
 
-  set state(fix){
-    if (fix<0){
-      this._state = 0;
-    } else if (fix > 100){
-      this._state = 100;
-    } else{
-      this._state = fix;
+//ЗАДАЧА 2:
+
+class Triangle {
+  constructor(a, b, c) {
+    this.a = a;
+    this.b = b;
+    this.c = c;
+
+    if(((a + b) < c) || ((a + c) < b) || ((c + b) < a)) {
+      throw new Error("Треугольник с такими сторонами не существует");
     }
   }
+  getPerimeter() {
+    return (this.a + this.b + this.c);
+  }
 
-  get state(){
-    return this._state;
+  getArea() {
+    const p = +(this.a+this.b+this.c)/2;
+    const S = +(Math.sqrt(p*(p-this.a)*(p-this.b)*(p-this.c))).toFixed(3);
+    return S;
   }
 }
 
-class Magazine extends PrintEditionItem{
-  constructor(name, releaseDate, pagesCount){
-    super(name, releaseDate, pagesCount);
-    this.type = "magazine";
-  }
-}
-
-class Book extends Magazine{
-  constructor(author, name, releaseDate, pagesCount){
-    super(name, releaseDate, pagesCount);
-    this.author = author;
-    this.type = "book";
-  }
-}
-
-
-class NovelBook extends Book{
-  constructor(author, name, releaseDate, pagesCount){
-    super(author, name, releaseDate, pagesCount);
-    this.type = "novel";
-  }
-}
-
-class FantasticBook extends Book{
-  constructor(author, name, releaseDate, pagesCount){
-    super(author, name, releaseDate, pagesCount);
-    this.type = "fantastic";
-  }
-}
-
-class DetectiveBook extends Book{
-  constructor(author, name, releaseDate, pagesCount){
-    super(author, name, releaseDate, pagesCount);
-    this.type = "detective";
-  }
-}
-
-//ЗАДАЧА 2
-
-class Library {
-  constructor(name){
-    this.name = name;
-    this.books = [];
-  }
-
-  addBook(book){
-    if(book.state > 30) {
-      this.books.push(book);
+function getTriangle(a, b, c) {
+  try {
+    return new Triangle(a, b, c);
+  } catch (err) {
+    return {
+      getArea: () => "Ошибка! Треугольник не существует",
+      getPerimeter: () => "Ошибка! Треугольник не существует",
     }
   }
-
-  findBookBy(type, value) {
-    for(let i = 0; i < this.books.length; i++) {
-      if(this.books[i][type] === value){
-        return this.books[i];
-      }
-    }
-    return null;
-  }
-
-  giveBookByName(bookName){
-    let reqBook = this.findBookBy('name', bookName);
-    let indexOfBook = this.books.indexOf(reqBook);
-      if (indexOfBook === -1) return null;
-      return this.books.splice(indexOfBook, 1)[0];
-    }
 }
